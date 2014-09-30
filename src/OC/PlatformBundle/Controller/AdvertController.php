@@ -10,18 +10,22 @@ class AdvertController extends Controller
 
     public function indexAction()
     {
-        //Avec un template twig
-        $content = $this->get('templating')->render('OCPlatformBundle:Advert:index.html.twig',
-                array(
-            'nom' => 'Lily'
-                )
+        $url = $this->get('router')->generate(
+                'oc_platform_view', array('id' => 5)
         );
-        return new Response($content);
+        return new Response("L'URL de l'annonce d'id 5 est : " . $url);
     }
 
-    public function byeAction()
+    public function viewAction($id)
     {
-        //Sans template
-        return new Response("Bye bye World !");
+        return new Response("Affichage de l'annonce d'id : " . $id);
+    }
+
+    public function viewSlugAction($slug, $year, $format)
+    {
+        return new Response(
+                "On pourrait afficher l'annonce correspondant au
+            slug '" . $slug . "', créée en " . $year . " et au format " . $format . "."
+        );
     }
 }
