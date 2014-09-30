@@ -1,0 +1,8 @@
+<p>
+      {% for message in app.session.flashbag.get('info') %}
+        <p>Message flash : {{ message }}</p>
+      {% endfor %}
+</p>
+
+{# La page d’accueil créer n’affiche que les 3 dernières annonces #}
+{{ render(controller("OCPlatformBundle:Advert:menu", {'limit': 3})) }}

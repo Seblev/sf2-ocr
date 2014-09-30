@@ -35,7 +35,6 @@ class AdvertController extends Controller
                 'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
                 'date' => new \Datetime())
         );
-        // Et modifiez le 2nd argument pour injecter notre liste
         return $this->render('OCPlatformBundle:Advert:index.html.twig',
                         array(
                     'listAdverts' => $listAdverts
@@ -59,6 +58,12 @@ class AdvertController extends Controller
 
     public function addAction(Request $request)
     {
+        $antispam = $this->container->get('oc_platform.antispam');
+        $text = '...';
+        if ($antispam->isSpam($text))
+        {
+            throw new \Exception('Votre message a été détecté comme spam !');
+        }
         if ($request->isMethod('POST'))
         {
             $request->getSession()->getFlashBag()->add('notice',
