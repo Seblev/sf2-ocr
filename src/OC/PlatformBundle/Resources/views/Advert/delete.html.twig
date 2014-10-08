@@ -1,0 +1,23 @@
+{# src/OC/PlatformBundle/Resources/views/Advert/delete.html.twig #}
+
+{% extends "OCPlatformBundle::layout.html.twig" %}
+
+{% block title %}
+  Supprimer une annonce - {{ parent() }}
+{% endblock %}
+
+{% block ocplatform_body %}
+
+  <h2>Supprimer une annonce</h2>
+
+  <p>
+    Etes-vous certain de vouloir supprimer l'annonce "{{ advert.title }}" ?
+  </p>
+
+  {# Ici on mettra un formulaire pour confirmer la suppression #}
+  <a href="{{ path('oc_platform_view', {'id': advert.id}) }}" class="btn btn-default">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+    Retour à l'annonce
+  </a>
+
+{% endblock %}
