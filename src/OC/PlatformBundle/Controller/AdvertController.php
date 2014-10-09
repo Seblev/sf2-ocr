@@ -228,4 +228,3 @@ class AdvertController extends Controller
         return new Response('OK');
     }
 }
-?>

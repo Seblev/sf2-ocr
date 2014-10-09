@@ -27,4 +27,3 @@ class LoadCategory implements FixtureInterface
     $manager->flush();
   }
 }
-?>

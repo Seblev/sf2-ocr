@@ -21,4 +21,3 @@ class LoadSkill implements FixtureInterface
     $manager->flush();
   }
 }
-?>
