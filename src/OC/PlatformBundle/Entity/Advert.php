@@ -27,6 +27,11 @@ class Advert
     private $applications;
 
     /**
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill", mappedBy="advert")
+     */
+    private $advertSkills;
+
+    /**
      * @ORM\Column(name="nb_applications", type="integer")
      */
     private $nbApplications = 0;
@@ -397,5 +402,38 @@ class Advert
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * Add advertSkills
+     *
+     * @param \OC\PlatformBundle\Entity\AdvertSkill $advertSkills
+     * @return Advert
+     */
+    public function addAdvertSkill(\OC\PlatformBundle\Entity\AdvertSkill $advertSkills)
+    {
+        $this->advertSkills[] = $advertSkills;
+
+        return $this;
+    }
+
+    /**
+     * Remove advertSkills
+     *
+     * @param \OC\PlatformBundle\Entity\AdvertSkill $advertSkills
+     */
+    public function removeAdvertSkill(\OC\PlatformBundle\Entity\AdvertSkill $advertSkills)
+    {
+        $this->advertSkills->removeElement($advertSkills);
+    }
+
+    /**
+     * Get advertSkills
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAdvertSkills()
+    {
+        return $this->advertSkills;
     }
 }

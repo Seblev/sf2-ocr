@@ -8,33 +8,19 @@ use Doctrine\ORM\QueryBuilder;
 class AdvertRepository extends EntityRepository
 {
 
-    public function myFind()
+    public function getAdverts()
     {
-        $qb = $this->createQueryBuilder('a');
-        // On peut ajouter ce qu'on veut avant
-        $qb
-                ->where('a.author = :author')
-                ->setParameter('author', 'Marine')
+        $query = $this->createQueryBuilder('a')
+                ->leftJoin('a.image', 'i')
+                ->addSelect('i')
+                ->leftJoin('a.categories', 'c')
+                ->addSelect('c')
+                ->leftJoin('a.advertSkills', 'advs')
+                ->addSelect('advs')
+                ->orderBy('a.date', 'DESC')
+                ->getQuery()
         ;
-        // On applique notre condition sur le QueryBuilder
-        $this->whereCurrentYear($qb);
-        // On peut ajouter ce qu'on veut après
-        $qb->orderBy('a.date', 'DESC');
-        return $qb
-                        ->getQuery()
-                        ->getResult()
-        ;
-    }
-
-    public function whereCurrentYear(QueryBuilder $qb)
-    {
-        $qb
-                ->andWhere('a.date BETWEEN :start AND :end')
-                ->setParameter('start', new \Datetime(date('Y') . '-01-01'))  // Date entre le 1er janvier de cette année
-                ->setParameter('end', new \Datetime(date('Y') . '-12-31'))  // Et le 31 décembre de cette année
-        ;
-
-        return $qb;
+        return $query->getResult();
     }
 
     public function getAdvertWithCategories(array $categoryNames)
@@ -57,12 +43,12 @@ class AdvertRepository extends EntityRepository
          *
           public function in($x, $y)
           {
-            if (is_array($y)) {
-                  foreach ($y as &$literal) {
-                      if ( ! ($literal instanceof Expr\Literal)) {
-                      $literal = $this->_quoteLiteral($literal);
-                  }
-            }
+          if (is_array($y)) {
+          foreach ($y as &$literal) {
+          if ( ! ($literal instanceof Expr\Literal)) {
+          $literal = $this->_quoteLiteral($literal);
+          }
+          }
           }
           return new Expr\Func($x . ' IN', (array) $y);
           }

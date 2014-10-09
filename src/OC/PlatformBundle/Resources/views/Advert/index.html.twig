@@ -7,8 +7,12 @@
   <ul>
     {% for advert in listAdverts %}
       <li>
+        <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
         <a href="{{ path('oc_platform_view', {'id': advert.id}) }}">
-          {{ advert.title }}
+        {{ advert.title }} - {{ advert.categories }}
+        {% for advertSkill in listAdvertSkills %}
+        {{ advert.advertSkill.name }} - {{ advert.level }}
+        {% endfor %}
         </a>
         par {{ advert.author }},
         le {{ advert.date|date('d/m/Y') }}

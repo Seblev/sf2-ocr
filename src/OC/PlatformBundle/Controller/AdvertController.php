@@ -21,26 +21,16 @@ class AdvertController extends Controller
         {
             throw new NotFoundHttpException('Page "' . $page . '" inexistante.');
         }
-        $listAdverts = array(
-            array(
-                'title' => 'Recherche développpeur Symfony2',
-                'id' => 1,
-                'author' => 'Alexandre',
-                'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
-                'date' => new \Datetime()),
-            array(
-                'title' => 'Mission de webmaster',
-                'id' => 2,
-                'author' => 'Hugo',
-                'content' => 'Nous recherchons un webmaster capable de maintenir notre site internet. Blabla…',
-                'date' => new \Datetime()),
-            array(
-                'title' => 'Offre de stage webdesigner',
-                'id' => 3,
-                'author' => 'Mathieu',
-                'content' => 'Nous proposons un poste pour webdesigner. Blabla…',
-                'date' => new \Datetime())
-        );
+         $em = $this
+                ->getDoctrine()
+                ->getManager()
+        ;
+
+        $listAdverts = $em
+                ->getRepository('OCPlatformBundle:Advert')
+                ->getAdverts()
+                ;
+
         return $this->render('OCPlatformBundle:Advert:index.html.twig',
                         array(
                     'listAdverts' => $listAdverts
@@ -203,13 +193,17 @@ class AdvertController extends Controller
         ));
     }
 
-    public function menuAction($limit)
+    public function menuAction($limit = 3)
     {
-        $listAdverts = array(
-            array('id' => 2, 'title' => 'Recherche développeur Symfony2'),
-            array('id' => 5, 'title' => 'Mission de webmaster'),
-            array('id' => 9, 'title' => 'Offre de stage webdesigner')
-        );
+                $em = $this
+                ->getDoctrine()
+                ->getManager()
+        ;
+
+        $listAdverts = $em
+                ->getRepository('OCPlatformBundle:Advert')
+                ->findBy(array(),array(),$limit,0)
+                ;
 
         return $this->render('OCPlatformBundle:Advert:menu.html.twig',
                         array(

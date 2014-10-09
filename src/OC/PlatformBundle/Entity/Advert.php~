@@ -27,6 +27,11 @@ class Advert
     private $applications;
 
     /**
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill", mappedBy="advert")
+     */
+    private $advertSkills;
+
+    /**
      * @ORM\Column(name="nb_applications", type="integer")
      */
     private $nbApplications = 0;
@@ -351,5 +356,51 @@ class Advert
     public function updateDate()
     {
         $this->setUpdatedAt(new \Datetime());
+    }
+
+    /**
+     * Set nbApplications
+     *
+     * @param integer $nbApplications
+     * @return Advert
+     */
+    public function setNbApplications($nbApplications)
+    {
+        $this->nbApplications = $nbApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get nbApplications
+     *
+     * @return integer 
+     */
+    public function getNbApplications()
+    {
+        return $this->nbApplications;
+    }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     * @return Advert
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string 
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }
