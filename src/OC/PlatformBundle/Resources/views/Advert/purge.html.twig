@@ -1,0 +1,17 @@
+{% extends "OCPlatformBundle::layout.html.twig" %}
+{% block title %}
+Purge - {{ parent() }}
+{% endblock %}
+{% block ocplatform_body %}
+<h2>Liste de la purge</h2>
+<div>
+    {% for advert in listPurge %}
+        <div>
+            par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}<br>
+            <div class="well">{{ advert.title }}</div><br>
+        </div>
+    {% else %}
+        <div class="well">Rien à purger.</div>
+    {% endfor %}
+    </div>
+{% endblock %}

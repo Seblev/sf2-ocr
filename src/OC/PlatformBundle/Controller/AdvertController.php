@@ -17,8 +17,8 @@ class AdvertController extends Controller
 
     public function indexAction($page)
     {
-    $nbPerPage = 2;
-    
+        $nbPerPage = 2;
+
         if ($page < 1)
         {
             throw new NotFoundHttpException('Page "' . $page . '" inexistante.');
@@ -30,7 +30,7 @@ class AdvertController extends Controller
 
         $listAdverts = $em
                 ->getRepository('OCPlatformBundle:Advert')
-                ->getAdverts($page, $nbPerPage )
+                ->getAdverts($page, $nbPerPage)
         ;
         // ceil arrondi par excès
         $nbPages = ceil(count($listAdverts) / $nbPerPage);
@@ -231,5 +231,20 @@ class AdvertController extends Controller
         $em->flush();
 
         return new Response('OK');
+    }
+
+    public function purgeAction()
+    {
+        $OCPurge = $this
+                ->container
+                ->get('oc_platform.advert_purger') // va chercher le service
+        ;
+
+        $listPurge = $OCPurge
+                ->purge('15') // lance la purge des annonce vieille de plus de 15 jours
+        ;
+
+        return $this->render('OCPlatformBundle:Advert:purge.html.twig',
+                        array('listPurge' => $listPurge));
     }
 }

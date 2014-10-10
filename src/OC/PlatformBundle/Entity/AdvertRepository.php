@@ -8,6 +8,28 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class AdvertRepository extends EntityRepository
 {
+    /*
+     * Renvoi la liste des annonce vieille de plus de $days avec 0 candidatures
+     */
+
+    public function getAdvertListPurge($days) // paramètres X
+    {
+        $datePurge = new \DateTime(); // datetime actuel
+
+        $datePurge->sub(new \DateInterval('P' . $days . 'D')); //datetime - X jours
+
+        $query = $this->createQueryBuilder('a')
+                ->where('a.updatedAt < :datePurge') // date de mise à jour doit être plus récente que la date de purge
+                ->orWhere('a.date < :datePurge') // date de création doit être plus récente que la date de purge
+                ->setParameter('datePurge', $datePurge)
+                ->andWhere('a.nbApplications = 0') //vérifie que le compteur de candidatures est à 0
+                ->getQuery()
+        ;
+
+        return $query
+                        ->getResult()
+        ;
+    }
 
     public function getAdverts($page, $nbPerPage)
     {

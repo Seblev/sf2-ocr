@@ -22,12 +22,12 @@ class Advert
     private $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", mappedBy="advert")
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", cascade={"persist", "remove"}, mappedBy="advert")
      */
     private $applications;
 
     /**
-     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill", mappedBy="advert")
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill", cascade={"persist", "remove"}, mappedBy="advert")
      */
     private $advertSkills;
 
@@ -37,7 +37,7 @@ class Advert
     private $nbApplications = 0;
 
     /**
-     * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist", "remove"})
      */
     private $image;
 
