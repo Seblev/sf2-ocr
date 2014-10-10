@@ -1,24 +1,36 @@
 {% extends "OCPlatformBundle::layout.html.twig" %}
 {% block title %}
-  Accueil - {{ parent() }}
+Accueil - {{ parent() }}
 {% endblock %}
 {% block ocplatform_body %}
-  <h2>Liste des annonces</h2>
-  <ul>
+<h2>Liste des annonces</h2>
+<div>
     {% for advert in listAdverts %}
-      <li>
-        <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}">
-        <a href="{{ path('oc_platform_view', {'id': advert.id}) }}">
-        {{ advert.title }} - {{ advert.categories }}
-        {% for advertSkill in listAdvertSkills %}
-        {{ advert.advertSkill.name }} - {{ advert.level }}
+        <div>
+            <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}"><br>
+            par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}<br>
+            <a href="{{ path('oc_platform_view', {'id': advert.id}) }}">
+            <div class="well">{{ advert.title }}</a><br>
+        {% if not advert.categories.empty %}
+            Catégories :
+            {% for category in advert.Categories %}
+                {{ category.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+        {% endif %}<br>
+        
+        {% for advertSkill in advert.advertSkills %}
+            {{ advertSkill.skill.name }} - {{ advertSkill.level }}<br>
         {% endfor %}
-        </a>
-        par {{ advert.author }},
-        le {{ advert.date|date('d/m/Y') }}
-      </li>
+            </div><br>
+        </div>
     {% else %}
-      <li>Pas (encore !) d'annonces</li>
+            <div class="well">Pas (encore !) d'annonces</div>
     {% endfor %}
-  </ul>
+</div>
+<ul class="pagination">
+  {% for p in range(1, nbPages) %}
+    <li{% if p == page %} class="active"{% endif %}>
+      <a href="{{ path('oc_platform_home', {'page': p}) }}">{{ p }}</a>
+    </li>
+  {% endfor %}
+</ul>
 {% endblock %}

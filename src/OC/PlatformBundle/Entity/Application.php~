@@ -14,15 +14,10 @@ class Application
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\Advert")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $advert;
-
-    /**
      * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\Advert", inversedBy="applications")
      * @ORM\JoinColumn(nullable=false)
      */
+    private $advert;
 
     /**
      * @var integer

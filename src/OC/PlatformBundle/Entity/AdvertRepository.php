@@ -4,11 +4,12 @@ namespace OC\PlatformBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class AdvertRepository extends EntityRepository
 {
 
-    public function getAdverts()
+    public function getAdverts($page, $nbPerPage)
     {
         $query = $this->createQueryBuilder('a')
                 ->leftJoin('a.image', 'i')
@@ -17,10 +18,17 @@ class AdvertRepository extends EntityRepository
                 ->addSelect('c')
                 ->leftJoin('a.advertSkills', 'advs')
                 ->addSelect('advs')
+                ->leftJoin('advs.skill', 's')
+                ->addSelect('s')
                 ->orderBy('a.date', 'DESC')
                 ->getQuery()
         ;
-        return $query->getResult();
+        $query
+                ->setFirstResult(($page - 1) * $nbPerPage)
+                ->setMaxResults($nbPerPage)
+        ;
+
+        return new Paginator($query, true);
     }
 
     public function getAdvertWithCategories(array $categoryNames)

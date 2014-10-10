@@ -17,23 +17,34 @@ class AdvertController extends Controller
 
     public function indexAction($page)
     {
+    $nbPerPage = 2;
+    
         if ($page < 1)
         {
             throw new NotFoundHttpException('Page "' . $page . '" inexistante.');
         }
-         $em = $this
+        $em = $this
                 ->getDoctrine()
                 ->getManager()
         ;
 
         $listAdverts = $em
                 ->getRepository('OCPlatformBundle:Advert')
-                ->getAdverts()
-                ;
+                ->getAdverts($page, $nbPerPage )
+        ;
+        // ceil arrondi par excès
+        $nbPages = ceil(count($listAdverts) / $nbPerPage);
+
+        if ($page > $nbPages)
+        {
+            throw $this->createNotFoundException("La page " . $page . " n'existe pas.");
+        }
 
         return $this->render('OCPlatformBundle:Advert:index.html.twig',
                         array(
-                    'listAdverts' => $listAdverts
+                    'listAdverts' => $listAdverts,
+                    'nbPages' => $nbPages,
+                    'page' => $page
         ));
     }
 
@@ -195,15 +206,15 @@ class AdvertController extends Controller
 
     public function menuAction($limit = 3)
     {
-                $em = $this
+        $em = $this
                 ->getDoctrine()
                 ->getManager()
         ;
 
         $listAdverts = $em
                 ->getRepository('OCPlatformBundle:Advert')
-                ->findBy(array(),array(),$limit,0)
-                ;
+                ->findBy(array(), array(), $limit, 0)
+        ;
 
         return $this->render('OCPlatformBundle:Advert:menu.html.twig',
                         array(
