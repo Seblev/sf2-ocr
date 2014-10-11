@@ -20,25 +20,39 @@ class OCPurger
      */
     public function purge($days)
     {
+        /*
+         * Récupère la liste des adverts à purger
+         */
         $listPurge = $this
                 ->em
                 ->getRepository('OCPlatformBundle:Advert')
                 ->getAdvertListPurge($days)
         ;
 
-        foreach ($listPurge AS $purge) // pour chaque annonce qui correspond à la purge
+        /*
+         * Pour chaque annonce qui correspond à la purge
+         */
+        foreach ($listPurge AS $purge)
         {
+            /* Donne l'ordre d'effacer l'annonce 
+             * et se qui lui est associé (image, advertSkill, advert_category) 
+             * si ils ont une cascade de remove
+             */
             $this
                     ->em
-                    ->remove($purge) // donne l'ordre d'effacer l'annonce
+                    ->remove($purge)
             ;
         }
-
+        /*
+         * Lance la suppression effective
+         */
         $this
                 ->em
-                ->flush() // lance la suppression effective
+                ->flush()
         ;
-
-        return $listPurge; // renvoi la liste des éléments purgés afin de l'afficher
+/*
+ * renvoi la liste des éléments purgés afin de l'afficher
+ */
+        return $listPurge;
     }
 }

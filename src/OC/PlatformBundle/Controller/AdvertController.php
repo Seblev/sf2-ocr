@@ -233,7 +233,7 @@ class AdvertController extends Controller
         return new Response('OK');
     }
 
-    public function purgeAction()
+    public function purgeAction($days)
     {
         $OCPurge = $this
                 ->container
@@ -241,9 +241,8 @@ class AdvertController extends Controller
         ;
 
         $listPurge = $OCPurge
-                ->purge('15') // lance la purge des annonce vieille de plus de 15 jours
+                ->purge($days) // lance la purge des annonces vieilles de plus de $days jours
         ;
-
         return $this->render('OCPlatformBundle:Advert:purge.html.twig',
                         array('listPurge' => $listPurge));
     }

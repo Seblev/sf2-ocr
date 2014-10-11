@@ -9,20 +9,20 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class AdvertRepository extends EntityRepository
 {
     /*
-     * Renvoi la liste des annonce vieille de plus de $days avec 0 candidatures
+     * Renvoi la liste des annonces vieilles de plus de $days avec 0 candidatures
      */
 
     public function getAdvertListPurge($days) // paramètres X
     {
         $datePurge = new \DateTime(); // datetime actuel
-
-        $datePurge->sub(new \DateInterval('P' . $days . 'D')); //datetime - X jours
+        $datePurge->sub(new \DateInterval('P' . $days . 'D')); // soustrait $days jours à datetime - 
 
         $query = $this->createQueryBuilder('a')
-                ->where('a.updatedAt < :datePurge') // date de mise à jour doit être plus récente que la date de purge
-                ->orWhere('a.date < :datePurge') // date de création doit être plus récente que la date de purge
+                ->where('a.updatedAt < :datePurge OR a.updatedAt IS NULL') // date de mise à jour doit être plus récente que la date de purge OU prend le cas ou il n'y a jamais eu de màj
+                ->andWhere('a.date < :datePurge') // date de création doit être plus récente que la date de purge
                 ->setParameter('datePurge', $datePurge)
-                ->andWhere('a.nbApplications = 0') //vérifie que le compteur de candidatures est à 0
+//              ->andWhere('a.nbApplications = 0') // vérifie que le compteur de candidatures est à 0, inutile puisque qu'on vérifie si il y en a pour de vrai en dessous
+                ->andWhere('a.applications IS EMPTY') // vérifie qu'il n'y a aucune candidature
                 ->getQuery()
         ;
 
