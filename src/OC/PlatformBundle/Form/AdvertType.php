@@ -4,6 +4,8 @@ namespace OC\PlatformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class AdvertType extends AbstractType
@@ -16,17 +18,37 @@ class AdvertType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+                ->addEventListener(
+                        FormEvents::PRE_SET_DATA,
+                        function(FormEvent $event) {
+                            $advert = $event->getData();
+                            if (null === $advert)
+                            {
+                                return;
+                            }
+                            if (!$advert->getPublished() || null === $advert->getId())
+                            {
+                                $event->getForm()->add('published', 'checkbox',
+                                        array('required' => false));
+                            }
+                            else
+                            {
+                                $event->getForm()->remove('published');
+                            }
+                        }
+                )
                 ->add('date', 'date')
                 ->add('title', 'text')
                 ->add('author', 'text')
                 ->add('content', 'textarea')
                 ->add('published', 'checkbox', array('required' => false))
                 ->add('image', new ImageType())
-                ->add('categories', 'collection',
+                ->add('categories', 'entity',
                         array(
-                    'type' => new CategoryType(),
-                    'allow_add' => true,
-                    'allow_delete' => true
+                    'class' => 'OCPlatformBundle:Category',
+                    'property' => 'name',
+                    'multiple' => true,
+                    'expanded' => true
                 ))
                 ->add('save', 'submit')
         ;

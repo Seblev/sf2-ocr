@@ -87,7 +87,7 @@ class AdvertController extends Controller
     public function addAction(Request $request)
     {
         $advert = new Advert();
-        $form = $this->get('form.factory')->create(new AdvertType(), $advert);
+        $form = $this->createForm(new AdvertType(), $advert);
         if ($form->handleRequest($request)->isValid())
         {
             $em = $this->getDoctrine()->getManager();
