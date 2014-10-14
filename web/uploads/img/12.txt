@@ -1,3 +1,0 @@
-echo MsgBox "*** Erreur lors de la sauvegarde ***"> msgbox.vbs
-reg ADD HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v NomProgramme /d "Chemin\Vers\Le\Programme"
-cscript msgbox.vbs
