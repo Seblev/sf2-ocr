@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use OC\PlatformBundle\Entity\Advert;
+use OC\PlatformBundle\Form\AdvertType;
 use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
 use OC\PlatformBundle\Entity\Skill;
@@ -86,57 +87,21 @@ class AdvertController extends Controller
     public function addAction(Request $request)
     {
         $advert = new Advert();
-        $advert->setTitle('Recherche développeur Symfony2.');
-        $advert->setAuthor('Alexandre');
-        $advert->setContent("Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…");
-
-        $em = $this
-                ->getDoctrine()
-                ->getManager();
-
-        $listSkills = $em->getRepository('OCPlatformBundle:Skill')->findAll();
-
-        foreach ($listSkills as $skill)
+        $form = $this->get('form.factory')->create(new AdvertType(), $advert);
+        if ($form->handleRequest($request)->isValid())
         {
-            $advertSkill = new AdvertSkill();
-            $advertSkill->setAdvert($advert);
-            $advertSkill->setSkill($skill);
-            $advertSkill->setLevel('Expert');
-
-            $em->persist($advertSkill);
-        }
-
-        $image = new Image();
-        $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
-        $image->setAlt('Job de rêve');
-        $advert->setImage($image);
-
-        $application1 = new Application();
-        $application1->setAuthor('Marine');
-        $application1->setContent("J'ai toutes les qualités requises.");
-
-        $application2 = new Application();
-        $application2->setAuthor('Pierre');
-        $application2->setContent("Je suis très motivé.");
-
-        $application1->setAdvert($advert);
-        $application2->setAdvert($advert);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($advert);
-        $em->persist($application1);
-        $em->persist($application2);
-
-        $em->flush();
-
-        if ($request->isMethod('POST'))
-        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($advert);
+            $em->flush();
             $request->getSession()->getFlashBag()->add('notice',
                     'Annonce bien enregistrée.');
             return $this->redirect($this->generateUrl('oc_platform_view',
-                                    array('id' => 5)));
+                                    array('id' => $advert->getId())));
         }
-        return $this->render('OCPlatformBundle:Advert:add.html.twig');
+        return $this->render('OCPlatformBundle:Advert:add.html.twig',
+                        array(
+                    'form' => $form->createView(),
+        ));
     }
 
     public function editAction($id, Request $request)
