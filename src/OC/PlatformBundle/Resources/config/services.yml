@@ -8,6 +8,13 @@ services:
         arguments: [@mailer]
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+
     oc_platform.advert_purger:
         class: OC\PlatformBundle\Purger\OCPurger
         arguments: [@doctrine.orm.entity_manager]
+
+    oc_platform.validator.antiflood:                              
+        class: OC\PlatformBundle\Validator\AntifloodValidator     
+        arguments: [@request_stack, @doctrine.orm.entity_manager]
+        tags:
+            - { name: validator.constraint_validator, alias: oc_platform_antiflood }

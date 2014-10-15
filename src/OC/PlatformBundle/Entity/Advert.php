@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use OC\PlatformBundle\Validator\Antiflood;
 
 /**
  * Advert
@@ -92,6 +93,7 @@ class Advert
      *
      * @ORM\Column(name="content", type="text")
      * @Assert\NotBlank()
+     * @Antiflood()
      */
     private $content;
 
@@ -102,7 +104,7 @@ class Advert
 
     public function __construct()
     {
-        // Par défaut, la date de l'annonce est la date d'aujourd'hui
+// Par défaut, la date de l'annonce est la date d'aujourd'hui
         $this->date = new \Datetime();
         $this->categories = new ArrayCollection();
         $this->applications = new ArrayCollection();
