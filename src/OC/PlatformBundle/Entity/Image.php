@@ -118,7 +118,7 @@ class Image
             return;
         }
 
-        $this->url = $this->file->guessExtension();
+        $this->url = $this->file->getClientOriginalExtension();
 
         $this->alt = $this->file->getClientOriginalName();
     }
@@ -144,8 +144,7 @@ class Image
         }
 
         $this->file->move(
-                $this->getUploadRootDir(), 
-                $this->id . '.' . $this->url
+                $this->getUploadRootDir(), $this->id . '.' . $this->url
         );
     }
 

@@ -50,7 +50,6 @@ class AdvertType extends AbstractType
                     'multiple' => true,
                     'expanded' => true
                 ))
-                ->add('save', 'submit')
         ;
     }
 

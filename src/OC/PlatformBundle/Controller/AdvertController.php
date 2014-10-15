@@ -88,32 +88,26 @@ class AdvertController extends Controller
     {
         $advert = new Advert();
         $form = $this->createForm(new AdvertType(), $advert);
-        if ($form->handleRequest($request)->isValid())
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
         {
             $em = $this->getDoctrine()->getManager();
             $em->persist($advert);
             $em->flush();
             $request->getSession()->getFlashBag()->add('notice',
                     'Annonce bien enregistrée.');
-            return $this->redirect($this->generateUrl('oc_platform_view',
+            return $this->redirect($this->generateUrl(
+                                    'oc_platform_view',
                                     array('id' => $advert->getId())));
         }
         return $this->render('OCPlatformBundle:Advert:add.html.twig',
                         array(
-                    'form' => $form->createView(),
+                    'form' => $form->createView()
         ));
     }
 
     public function editAction($id, Request $request)
     {
-        if ($request->isMethod('POST'))
-        {
-            $request->getSession()->getFlashBag()->add('notice',
-                    'Annonce bien modifiée.');
-            return $this->redirect($this->generateUrl('oc_platform_view',
-                                    array('id' => 5)));
-        }
-
         $em = $this
                 ->getDoctrine()
                 ->getManager();
@@ -127,22 +121,31 @@ class AdvertController extends Controller
             throw new NotFoundHttpException("L'annonce d'id " . $id . " n'existe pas.");
         }
 
-        $listCategories = $em->getRepository('OCPlatformBundle:Category')->findAll();
+        $form = $this->createForm(new AdvertType(), $advert);
 
-        foreach ($listCategories as $category)
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
         {
-            $advert->addCategory($category);
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('notice',
+                    'Annonce bien modifiée..');
+            return $this->redirect(
+                            $this->generateUrl(
+                                    'oc_platform_view',
+                                    array(
+                                'id' => $advert->getId()
+                                    )
+            ));
         }
-
-        $em->flush();
 
         return $this->render('OCPlatformBundle:Advert:edit.html.twig',
                         array(
-                    'advert' => $advert
+                    'advert' => $advert,
+                    'form' => $form->createView()
         ));
     }
 
-    public function deleteAction($id)
+    public function deleteAction($id, Request $request)
     {
         $em = $this
                 ->getDoctrine()
@@ -157,16 +160,27 @@ class AdvertController extends Controller
             throw new NotFoundHttpException("L'annonce d'id " . $id . " n'existe pas.");
         }
 
-        foreach ($advert->getCategories() as $category)
+        $form = $this->createFormBuilder()->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid())
         {
-            $advert->removeCategory($category);
+            $em->remove($advert);
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('notice',
+                    "L'annonce d'id " . $id . "  a bien été supprimée.");
+            return $this->redirect(
+                            $this->generateUrl('oc_platform_home')
+                    )
+            ;
         }
-
-        $em->flush();
-
         return $this->render('OCPlatformBundle:Advert:delete.html.twig',
-                        array('advert' => $advert
-        ));
+                        array(
+                    'advert' => $advert,
+                    'form' => $form->createView()
+                        )
+                )
+        ;
     }
 
     public function menuAction($limit = 3)

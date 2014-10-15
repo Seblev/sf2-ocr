@@ -3,8 +3,4 @@
   Accueil - {{ parent() }}
 {% endblock %}
 {% block body %}
-<p>      {% for message in app.session.flashbag.get('info') %}
-        <p>Message flash : {{ message }}</p>
-      {% endfor %}
-</p>
 {% endblock %}
