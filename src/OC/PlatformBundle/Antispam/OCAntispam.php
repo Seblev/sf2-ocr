@@ -2,28 +2,35 @@
 
 namespace OC\PlatformBundle\Antispam;
 
-class OCAntispam
+class OCAntispam extends \Twig_Extension
 {
 
-    private $mailer;
-    private $locale;
-    private $minLength;
+    protected $mailer;
+    protected $locale;
+    protected $nbForSpam;
 
-    public function __construct(\Swift_Mailer $mailer, $locale, $minLength)
+    // Dans le constructeur, on retire $locale des arguments
+    public function __construct(\Swift_Mailer $mailer, $nbForSpam)
     {
         $this->mailer = $mailer;
-        $this->locale = $locale;
-        $this->minLength = (int)$minLength;
+        $this->nbForSpam = (int)$nbForSpam;
     }
 
-    /**
-     * Vérifie si le texte est un spam ou non
-     *
-     * @param string $text
-     * @return bool
-     */
-    public function isSpam($text)
+    // Et on ajoute un setter
+    public function setLocale($locale)
     {
-        return strlen($text) < $this->minLength;
+        $this->locale = $locale;
+    }
+
+    public function getFunctions()
+    {
+        return array(
+            'checkIfSpam' => new \Twig_Function_Method($this, 'isSpam')
+        );
+    }
+
+    public function getName()
+    {
+        return 'OCAntispam';
     }
 }

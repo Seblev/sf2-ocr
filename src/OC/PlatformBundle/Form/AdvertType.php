@@ -40,7 +40,7 @@ class AdvertType extends AbstractType
                 ->add('date', 'date')
                 ->add('title', 'text')
                 ->add('author', 'text')
-                ->add('content', 'textarea')
+                ->add('content', 'ckeditor')
                 ->add('published', 'checkbox', array('required' => false))
                 ->add('image', new ImageType())
                 ->add('categories', 'entity',
