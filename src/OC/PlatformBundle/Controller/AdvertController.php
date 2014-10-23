@@ -12,6 +12,8 @@ use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
 use OC\PlatformBundle\Entity\Skill;
 use OC\PlatformBundle\Entity\AdvertSkill;
+use OC\PlatformBundle\Bigbrother\BigbrotherEvents;
+use OC\PlatformBundle\Bigbrother\MessagePostEvent;
 
 class AdvertController extends Controller
 {
@@ -91,7 +93,21 @@ class AdvertController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())
         {
-            $em = $this->getDoctrine()->getManager();
+            $event = new MessagePostEvent(
+                    $advert->getContent(), 
+                    $advert->getUser()
+                    )
+            ;
+
+            $this
+                    ->get('event_dispatcher')
+                    ->dispatch(BigbrotherEvents::onMessagePost, $event)
+            ;
+            $advert->setContent($event->getMessage());
+            $em = $this
+                    ->getDoctrine()
+                    ->getManager()
+            ;
             $em->persist($advert);
             $em->flush();
             $request->getSession()->getFlashBag()->add('notice',
