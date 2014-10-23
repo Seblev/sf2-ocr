@@ -3,8 +3,8 @@
   <file source-language="fr" datatype="plaintext" original="file.ext">
     <body>
       <trans-unit id="1">
-        <source>Bonjour</source>
-        <target>Hello</target>
+        <source>Dernières annonces</source>
+        <target>Last adverts</target>
       </trans-unit>
       <trans-unit id="2">
         <source>Les annonces</source>

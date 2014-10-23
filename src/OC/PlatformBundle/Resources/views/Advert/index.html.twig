@@ -9,7 +9,7 @@ Accueil - {{ parent() }}
         <div>
             <img src="{{ advert.image.url }}" alt="{{ advert.image.alt }}"><br>
             par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}<br>
-            <a href="{{ path('oc_platform_view', {'id': advert.id}) }}">
+            <a href="{{ path('oc_platform_view', {'advert_id': advert.id}) }}">
             <div class="well">{{ advert.title }}</a><br>
         {% if not advert.categories.empty %}
             Catégories :

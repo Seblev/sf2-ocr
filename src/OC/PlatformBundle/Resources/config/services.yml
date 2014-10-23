@@ -35,3 +35,7 @@ services:
         arguments: [@oc_platform.beta.html, "2014-10-30"]
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: processBeta }
+    oc_platform.json_paramconverter:
+        class: OC\PlatformBundle\ParamConverter\JsonParamConverter
+        tags:
+            - { name: request.param_converter }

@@ -35,7 +35,7 @@
                         <li><a href="{{ path('oc_platform_home') }}">Accueil</a></li>
                         <li><a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a></li>
                     </ul>
-                    <h4>Dernières annonces</h4>
+                    <h4>{{ 'Dernières annonces'|trans }}</h4>
         {% render(controller("OCPlatformBundle:Advert:menu", {'limit': 3})) %}
                 </div>
                 <div id="content" class="col-md-9">

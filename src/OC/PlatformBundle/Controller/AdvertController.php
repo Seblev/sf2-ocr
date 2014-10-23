@@ -14,6 +14,7 @@ use OC\PlatformBundle\Entity\Skill;
 use OC\PlatformBundle\Entity\AdvertSkill;
 use OC\PlatformBundle\Bigbrother\BigbrotherEvents;
 use OC\PlatformBundle\Bigbrother\MessagePostEvent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class AdvertController extends Controller
 {
@@ -51,22 +52,15 @@ class AdvertController extends Controller
         ));
     }
 
-    public function viewAction($id)
+    /**
+     * @ParamConverter("advert", options={"mapping": {"advert_id": "id"}})
+     */
+    public function viewAction(Advert $advert)
     {
         $em = $this
                 ->getDoctrine()
                 ->getManager()
         ;
-
-        $advert = $em
-                ->getRepository('OCPlatformBundle:Advert')
-                ->find($id)
-        ;
-
-        if (null === $advert)
-        {
-            throw new NotFoundHttpException("L'annonce d'id " . $id . " n'existe pas.");
-        }
 
         $listApplications = $em
                 ->getRepository('OCPlatformBundle:Application')
@@ -247,5 +241,13 @@ class AdvertController extends Controller
                         array(
                     'name' => $name
         ));
+    }
+
+    /**
+     * @ParamConverter("json")
+     */
+    public function ParamConverterAction($json)
+    {
+        return new Response(print_r($json, true));
     }
 }
