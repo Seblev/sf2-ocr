@@ -94,8 +94,7 @@ class AdvertController extends Controller
         if ($form->isSubmitted() && $form->isValid())
         {
             $event = new MessagePostEvent(
-                    $advert->getContent(), 
-                    $advert->getUser()
+                    $advert->getContent(), $advert->getUser()
                     )
             ;
 
@@ -240,5 +239,13 @@ class AdvertController extends Controller
         ;
         return $this->render('OCPlatformBundle:Advert:purge.html.twig',
                         array('listPurge' => $listPurge));
+    }
+
+    public function translationAction($name)
+    {
+        return $this->render('OCPlatformBundle:Advert:translation.html.twig',
+                        array(
+                    'name' => $name
+        ));
     }
 }
